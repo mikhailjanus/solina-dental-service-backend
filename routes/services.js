@@ -14,10 +14,10 @@ router.get('/', async (req, res) => {
 
 router.post('/', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { name, description, price, duration, image } = req.body;
+    const { name, description, price_range_from, price_range_to, duration, image } = req.body;
     const [result] = await pool.query(
-      'INSERT INTO services (name, description, price, duration, image) VALUES (?, ?, ?, ?, ?)',
-      [name, description, price, duration, image]
+      'INSERT INTO services (name, description, price_range, duration, image) VALUES (?, ?, ?, ?, ?)',
+      [name, description, price_range_from, price_range_to, duration, image]
     );
     res.status(201).json({ id: result.insertId, ...req.body });
   } catch (error) {
@@ -27,10 +27,10 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
 
 router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { name, description, price, duration, image, is_active } = req.body;
+    const { name, description, price_range_from, price_range_to, duration, image, is_active } = req.body;
     await pool.query(
-      'UPDATE services SET name = ?, description = ?, price = ?, duration = ?, image = ?, is_active = ? WHERE id = ?',
-      [name, description, price, duration, image, is_active, req.params.id]
+      'UPDATE services SET name = ?, description = ?, price_range = ?, duration = ?, image = ?, is_active = ? WHERE id = ?',
+      [name, description, price_range_from, price_range_to , duration, image, is_active, req.params.id]
     );
     res.json({ message: 'Service updated successfully' });
   } catch (error) {

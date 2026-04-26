@@ -59,15 +59,17 @@ const initializeTables = async () => {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS appointments (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
         service_id INT NOT NULL,
         clinic_id INT NOT NULL,
+        first_name VARCHAR(70) NOT NULL,
+        middle_name VARCHAR(70) NOT NULL,
+        last_name VARCHAR(70) NOT NULL,
+        mobile_number VARCHAR(45) NOT NULL,
         appointment_date DATE NOT NULL,
         appointment_time TIME NOT NULL,
         status ENUM('pending', 'confirmed', 'completed', 'cancelled') DEFAULT 'pending',
         notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (service_id) REFERENCES services(id),
         FOREIGN KEY (clinic_id) REFERENCES clinics(id)
       )
