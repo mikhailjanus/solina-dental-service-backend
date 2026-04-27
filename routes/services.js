@@ -5,7 +5,17 @@ const { authenticateToken, isAdmin } = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const [services] = await pool.query('SELECT * FROM services WHERE is_active = true');
+    const { status } = req.query;
+    let query = 'SELECT * FROM services';
+    let params = [];
+    
+    if (status === 'active') {
+      query += ' WHERE is_active = true';
+    } else if (status === 'inactive') {
+      query += ' WHERE is_active = false';
+    }
+    
+    const [services] = await pool.query(query, params);
     res.json(services);
   } catch (error) {
     res.status(500).json({ message: error.message });
