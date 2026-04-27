@@ -11,12 +11,12 @@ router.get('/', authenticateToken, async (req, res) => {
      query = `
        SELECT
        a.id,
-       a.patient_id,
-       p.patientFirstName,
-       p.patientMiddleName,
-       p.patientLastName,
+       a.patient_id,        
+       p.patient_firstname,
+       p.patient_middlename,
+       p.patient_lastname,
        p.email,
-       p.mobileNumber,
+       p.mobile_number,
        p.address AS patientAddress,
        a.total_amount,
        a.appointment_date,
@@ -24,7 +24,6 @@ router.get('/', authenticateToken, async (req, res) => {
        a.status,
        a.notes,
        s.name AS serviceName,
-       s.duration AS serviceDuration,
        c.name AS clinicName,
        c.address AS clinicAddress
        FROM appointments a
