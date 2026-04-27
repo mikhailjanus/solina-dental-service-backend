@@ -14,12 +14,12 @@ router.get('/', authenticateToken, async (req, res) => {
 
 router.post('/', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address } = req.body;
+    const { patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address } = req.body;
     const [result] = await pool.query(
-      'INSERT INTO patients (patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address) VALUES (?, ?, ?, ?, ?, ?)',
-      [patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address]
+      'INSERT INTO patients (patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address) VALUES (?, ?, ?, ?, ?, ?)',
+      [patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address]
     );
-    res.status(201).json({ id: result.insertId, patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address });
+    res.status(201).json({ id: result.insertId, patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -27,10 +27,10 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
 
 router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address } = req.body;
+    const { patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address } = req.body;
     await pool.query(
-      'UPDATE patients SET patientFirstName = ?, patientMiddleName = ?, patientLastName = ?, email = ?, mobileNumber = ?, address = ? WHERE id = ?',
-      [patientFirstName, patientMiddleName, patientLastName, email, mobileNumber, address, req.params.id]
+      'UPDATE patients SET patient_firstname = ?, patient_middlename = ?, patient_lastname = ?, email = ?, mobileNumber = ?, address = ? WHERE id = ?',
+      [patient_firstname, patient_middlename, patient_lastname, email, mobileNumber, address, req.params.id]
     );
     res.json({ message: 'Patient updated successfully' });
   } catch (error) {
