@@ -24,26 +24,28 @@ router.get('/', async (req, res) => {
 
 router.post('/', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { name, description, price_range_from, price_range_to, duration, image } = req.body;
+    const { name, description, price_range_from, price_range_to, image, is_active } = req.body;
     const [result] = await pool.query(
-      'INSERT INTO services (name, description, price_range, duration, image) VALUES (?, ?, ?, ?, ?)',
-      [name, description, price_range_from, price_range_to, duration, image]
+      'INSERT INTO services (name, description, price_range_from, price_range_to, image, is_active) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, description, parseFloat(price_range_from), parseFloat(price_range_to), image || null, is_active !== undefined ? parseInt(is_active) : 1]
     );
     res.status(201).json({ id: result.insertId, ...req.body });
   } catch (error) {
+    console.error('POST /services error:', error.message);
     res.status(500).json({ message: error.message });
   }
 });
 
 router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { name, description, price_range_from, price_range_to, duration, image, is_active } = req.body;
+    const { name, description, price_range_from, price_range_to, image, is_active } = req.body;
     await pool.query(
-      'UPDATE services SET name = ?, description = ?, price_range = ?, duration = ?, image = ?, is_active = ? WHERE id = ?',
-      [name, description, price_range_from, price_range_to , duration, image, is_active, req.params.id]
+      'UPDATE services SET name = ?, description = ?, price_range_from = ?, price_range_to = ?, image = ?, is_active = ? WHERE id = ?',
+      [name, description, parseFloat(price_range_from), parseFloat(price_range_to), image, parseInt(is_active), req.params.id]
     );
     res.json({ message: 'Service updated successfully' });
   } catch (error) {
+    console.error('PUT /services/:id error:', error.message);
     res.status(500).json({ message: error.message });
   }
 });
