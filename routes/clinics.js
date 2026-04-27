@@ -5,7 +5,7 @@ const { authenticateToken, isAdmin } = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const [clinics] = await pool.query('SELECT * FROM clinics WHERE is_active = true');
+    const [clinics] = await pool.query('SELECT * FROM clinics');
     res.json(clinics);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,6 +33,15 @@ router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
       [name, address, phone, image, operating_hours, is_active, req.params.id]
     );
     res.json({ message: 'Clinic updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM clinics WHERE id = ?', [req.params.id]);
+    res.json({ message: 'Clinic deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
